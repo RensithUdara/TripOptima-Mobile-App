@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_optima_mobile_app/models/location_model.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
@@ -8,7 +7,7 @@ import 'package:trip_optima_mobile_app/providers/trip_provider.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 
 class CreateTripScreen extends StatefulWidget {
-  const CreateTripScreen({Key? key}) : super(key: key);
+  const CreateTripScreen({super.key});
 
   @override
   State<CreateTripScreen> createState() => _CreateTripScreenState();
@@ -18,13 +17,13 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   DateTime _startDate = DateTime.now();
   DateTime? _endDate;
   final List<LocationModel> _selectedDestinations = [];
-  
+
   bool _isCreatingTrip = false;
-  
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -61,7 +60,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Trip description field
               TextFormField(
                 controller: _descriptionController,
@@ -73,15 +72,15 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
-              
+
               // Date range selection
               _buildDateRangeSelector(),
               const SizedBox(height: 16),
-              
+
               // Destinations
               _buildDestinationsSection(),
               const SizedBox(height: 24),
-              
+
               // Submit button
               SizedBox(
                 width: double.infinity,
@@ -99,10 +98,10 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       ),
     );
   }
-  
+
   Widget _buildDateRangeSelector() {
     final dateFormat = DateFormat('MMM dd, yyyy');
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,7 +110,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
-        
+
         // Start date
         ListTile(
           title: const Text('Start Date'),
@@ -119,7 +118,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           trailing: const Icon(Icons.calendar_today),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
           ),
           onTap: () async {
             final pickedDate = await showDatePicker(
@@ -128,11 +128,11 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               firstDate: DateTime.now().subtract(const Duration(days: 365)),
               lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
             );
-            
+
             if (pickedDate != null) {
               setState(() {
                 _startDate = pickedDate;
-                
+
                 // If end date is before start date, update it
                 if (_endDate != null && _endDate!.isBefore(_startDate)) {
                   _endDate = _startDate;
@@ -142,11 +142,12 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           },
         ),
         const SizedBox(height: 8),
-        
+
         // End date
         ListTile(
           title: const Text('End Date (Optional)'),
-          subtitle: Text(_endDate != null ? dateFormat.format(_endDate!) : 'Not set'),
+          subtitle:
+              Text(_endDate != null ? dateFormat.format(_endDate!) : 'Not set'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -164,7 +165,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
           ),
           onTap: () async {
             final pickedDate = await showDatePicker(
@@ -173,7 +175,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               firstDate: _startDate,
               lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
             );
-            
+
             if (pickedDate != null) {
               setState(() {
                 _endDate = pickedDate;
@@ -184,7 +186,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       ],
     );
   }
-  
+
   Widget _buildDestinationsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +205,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             ),
           ],
         ),
-        
+
         if (_selectedDestinations.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
@@ -218,7 +220,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
             itemCount: _selectedDestinations.length,
             itemBuilder: (context, index) {
               final destination = _selectedDestinations[index];
-              
+
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
@@ -227,7 +229,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                   ),
                   title: Text(destination.name),
                   subtitle: destination.address != null
-                      ? Text(destination.address!, maxLines: 1, overflow: TextOverflow.ellipsis)
+                      ? Text(destination.address!,
+                          maxLines: 1, overflow: TextOverflow.ellipsis)
                       : null,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -238,26 +241,28 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
                           icon: const Icon(Icons.arrow_upward),
                           onPressed: () {
                             setState(() {
-                              final item = _selectedDestinations.removeAt(index);
+                              final item =
+                                  _selectedDestinations.removeAt(index);
                               _selectedDestinations.insert(index - 1, item);
                             });
                           },
                           tooltip: 'Move up',
                         ),
-                      
+
                       // Reorder down
                       if (index < _selectedDestinations.length - 1)
                         IconButton(
                           icon: const Icon(Icons.arrow_downward),
                           onPressed: () {
                             setState(() {
-                              final item = _selectedDestinations.removeAt(index);
+                              final item =
+                                  _selectedDestinations.removeAt(index);
                               _selectedDestinations.insert(index + 1, item);
                             });
                           },
                           tooltip: 'Move down',
                         ),
-                      
+
                       // Remove
                       IconButton(
                         icon: const Icon(Icons.delete_outline),
@@ -274,7 +279,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
               );
             },
           ),
-          
+
         // Validation error message
         if (_selectedDestinations.isEmpty)
           const Padding(
@@ -287,14 +292,15 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       ],
     );
   }
-  
+
   void _addDestination() async {
     // This would normally open a location search screen
     // For now, we'll just add a placeholder location
-    
+
     // Get the location provider
-    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
-    
+    final locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+
     // Show a loading dialog
     showDialog(
       context: context,
@@ -310,14 +316,14 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
         ),
       ),
     );
-    
+
     try {
       // Simulate searching for a location
       await Future.delayed(const Duration(seconds: 1));
-      
+
       // Close the loading dialog
       Navigator.of(context).pop();
-      
+
       // Show location search results
       final location = await showDialog<LocationModel>(
         context: context,
@@ -385,7 +391,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
           ],
         ),
       );
-      
+
       if (location != null) {
         setState(() {
           _selectedDestinations.add(location);
@@ -396,7 +402,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       // Show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -406,11 +412,11 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       );
     }
   }
-  
+
   Future<void> _submitTrip() async {
     // Hide keyboard
     FocusScope.of(context).unfocus();
-    
+
     // Validate destinations
     if (_selectedDestinations.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -421,20 +427,20 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       );
       return;
     }
-    
+
     // Validate form
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    
+
     setState(() {
       _isCreatingTrip = true;
     });
-    
+
     // Get providers
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
     final uiProvider = Provider.of<UIProvider>(context, listen: false);
-    
+
     try {
       // Create a new trip
       final newTrip = TripModel(
@@ -443,28 +449,30 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
         description: _descriptionController.text,
         startDate: _startDate,
         endDate: _endDate,
-        userId: "current_user_id", // This would normally come from the AuthProvider
-        startLocation: _selectedDestinations.isNotEmpty ? _selectedDestinations.first : LocationModel(
-          id: "default",
-          name: "Starting Point",
-          latitude: 0,
-          longitude: 0,
-          placeId: "default_place"
-        ),
+        userId:
+            "current_user_id", // This would normally come from the AuthProvider
+        startLocation: _selectedDestinations.isNotEmpty
+            ? _selectedDestinations.first
+            : LocationModel(
+                id: "default",
+                name: "Starting Point",
+                latitude: 0,
+                longitude: 0,
+                placeId: "default_place"),
         destinations: _selectedDestinations,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       // Add the trip
       await tripProvider.createTrip(newTrip);
-      
+
       // Show success message
       uiProvider.showSnackBar(
         message: 'Trip created successfully!',
         type: SnackBarType.success,
       );
-      
+
       // Navigate back
       Navigator.of(context).pop();
     } catch (e) {
