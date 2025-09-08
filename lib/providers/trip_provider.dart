@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/models/location_model.dart';
+import 'package:trip_optima_mobile_app/models/trip_stats.dart';
 import 'package:uuid/uuid.dart';
 
 class TripProvider with ChangeNotifier {
@@ -8,6 +9,8 @@ class TripProvider with ChangeNotifier {
   TripModel? _currentTrip;
   bool _isLoading = false;
   String? _errorMessage;
+  TripStats _tripStats = TripStats();
+  List<LocationModel> _savedPlaces = [];
   
   final _uuid = const Uuid();
   
@@ -16,6 +19,8 @@ class TripProvider with ChangeNotifier {
   TripModel? get currentTrip => _currentTrip;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  TripStats get tripStats => _tripStats;
+  List<LocationModel> get savedPlaces => _savedPlaces;
   
   TripProvider() {
     _loadTrips();
@@ -39,6 +44,89 @@ class TripProvider with ChangeNotifier {
   // Public method to reload trips
   Future<void> loadTrips() async {
     await _loadTrips();
+  }
+  
+  // Load user trip statistics
+  Future<void> loadUserTripsStats() async {
+    _setLoading(true);
+    
+    try {
+      // In a real app, this would calculate statistics from the actual trips
+      // For now, we'll create dummy statistics
+      _tripStats = TripStats(
+        totalTrips: _trips.length,
+        totalDestinations: _calculateTotalDestinations(),
+        totalCountries: _calculateTotalCountries(),
+        totalDistance: _calculateTotalDistance(),
+        completedTrips: _trips.where((trip) => trip.status == TripStatus.completed).length,
+        plannedTrips: _trips.where((trip) => trip.status == TripStatus.planned).length,
+      );
+      
+      // Load saved places
+      await _loadSavedPlaces();
+      
+      _setLoading(false);
+      notifyListeners();
+    } catch (e) {
+      _handleError('Failed to load trip statistics: ${e.toString()}');
+    }
+  }
+  
+  // Calculate total number of unique destinations
+  int _calculateTotalDestinations() {
+    final Set<String> uniqueDestinations = {};
+    
+    for (var trip in _trips) {
+      // Add start location
+      uniqueDestinations.add(trip.startLocation.id);
+      
+      // Add all destinations
+      for (var destination in trip.destinations) {
+        uniqueDestinations.add(destination.id);
+      }
+    }
+    
+    return uniqueDestinations.length;
+  }
+  
+  // Calculate total number of unique countries (placeholder implementation)
+  int _calculateTotalCountries() {
+    // In a real app, you would extract country information from destinations
+    // For now, return a reasonable default
+    return 5;
+  }
+  
+  // Calculate total distance traveled
+  double _calculateTotalDistance() {
+    // In a real app, you would calculate this from the routes
+    // For now, return a reasonable default
+    return 1250.0;
+  }
+  
+  // Load saved places
+  Future<void> _loadSavedPlaces() async {
+    // In a real app, you would load from storage or API
+    // For now, use placeholder data
+    _savedPlaces = [
+      LocationModel(
+        id: '1',
+        name: 'Paris',
+        latitude: 48.8566,
+        longitude: 2.3522,
+        address: 'Paris, France',
+        imageUrl: 'https://example.com/paris.jpg',
+        tags: ['cities', 'europe'],
+      ),
+      LocationModel(
+        id: '2',
+        name: 'London',
+        latitude: 51.5074,
+        longitude: -0.1278,
+        address: 'London, UK',
+        imageUrl: 'https://example.com/london.jpg',
+        tags: ['cities', 'europe'],
+      ),
+    ];
   }
   
   // Create a new trip
