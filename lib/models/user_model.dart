@@ -9,6 +9,9 @@ class UserModel {
   final String userRole;
   final DateTime createdAt;
   final DateTime lastLoginAt;
+  
+  // Add displayName getter to maintain compatibility
+  String? get displayName => name;
 
   UserModel({
     required this.id,
