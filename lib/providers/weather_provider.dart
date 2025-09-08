@@ -538,10 +538,4 @@ class WeatherProvider with ChangeNotifier {
       print('Error fetching hourly forecast: ${e.toString()}');
     }
   }
-    notifyListeners();
-  }
-  
-  void _clearError() {
-    _errorMessage = null;
-  }
 }
