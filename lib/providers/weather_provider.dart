@@ -359,10 +359,13 @@ class WeatherProvider with ChangeNotifier {
     // Parse weather condition
     final condition = data['weather']?[0]?['main'] ?? 'Unknown';
     final description = data['weather']?[0]?['description'] ?? 'Unknown';
+    final icon = data['weather']?[0]?['icon'] ?? '';
     
     // Parse temperatures
     final temperature = data['main']?['temp']?.toDouble() ?? 0.0;
     final feelsLike = data['main']?['feels_like']?.toDouble() ?? 0.0;
+    final minTemp = data['main']?['temp_min']?.toDouble() ?? temperature - 2.0;
+    final maxTemp = data['main']?['temp_max']?.toDouble() ?? temperature + 2.0;
     
     // Parse wind
     final windSpeed = data['wind']?['speed']?.toDouble() ?? 0.0;
@@ -375,9 +378,9 @@ class WeatherProvider with ChangeNotifier {
     final visibility = data['visibility']?.toDouble() ?? 0.0;
     
     // Parse precipitation (if available)
-    double precipitation = 0.0;
+    double rain = 0.0;
     if (data.containsKey('rain')) {
-      precipitation = data['rain']?['1h']?.toDouble() ?? 0.0;
+      rain = data['rain']?['1h']?.toDouble() ?? 0.0;
     } else if (data.containsKey('snow')) {
       precipitation = data['snow']?['1h']?.toDouble() ?? 0.0;
     }
