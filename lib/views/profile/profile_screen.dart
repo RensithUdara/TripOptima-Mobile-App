@@ -24,36 +24,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
+    if (!mounted) return;
+    
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
-      // Get auth provider
+      // Store providers locally before the async gap
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
       // Make sure user data is loaded
       if (authProvider.currentUser == null) {
         await authProvider.getUserProfile();
       }
 
-      // Get trip provider
-      final tripProvider = Provider.of<TripProvider>(context, listen: false);
-
       // Load user's trips statistics
       await tripProvider.loadUserTripsStats();
+      
     } catch (e) {
       // Show error
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error loading profile: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading profile: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -184,8 +183,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // Email
               Text(
-                user.email ?? '',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                user.email,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
@@ -266,14 +265,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Saved Places'),
                 trailing: Consumer<TripProvider>(
                   builder: (context, tripProvider, _) {
-                    return tripProvider.savedPlaces.isNotEmpty
-                        ? Chip(
-                            label: Text(
-                                tripProvider.savedPlaces.length.toString()),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                          )
-                        : null;
+                    if (tripProvider.savedPlaces.isNotEmpty) {
+                      return Chip(
+                        label: Text(
+                            tripProvider.savedPlaces.length.toString()),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                      );
+                    }
+                    return const SizedBox.shrink(); // Return an empty widget instead of null
                   },
                 ),
                 onTap: () {
