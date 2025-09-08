@@ -2,24 +2,23 @@ import 'package:trip_optima_mobile_app/models/location_model.dart';
 
 class WeatherModel {
   final String id;
-  final LocationModel location;
+  final String locationId;
   final DateTime timestamp;
   final String condition;
+  final String description;
+  final String icon;
   final double temperature; // in Celsius
   final double feelsLike;
+  final double minTemp;
+  final double maxTemp;
   final double windSpeed;
-  final int windDirection;
+  final double windDirection;
   final double humidity;
-  final double precipitation;
+  final double rain;
+  final double snow;
   final double visibility;
-  final double uvIndex;
+  final double clouds;
   final double pressure;
-  final int cloudCover;
-  final DateTime sunrise;
-  final DateTime sunset;
-  final Map<String, dynamic> alerts;
-  final Map<String, dynamic> hourlyForecast;
-  final Map<String, dynamic> dailyForecast;
 
   WeatherModel({
     required this.id,
