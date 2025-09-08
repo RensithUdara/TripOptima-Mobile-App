@@ -537,7 +537,9 @@ class AuthProvider with ChangeNotifier {
       (_) async {
         if (_firebaseAuth.currentUser != null) {
           final newToken = await _firebaseAuth.currentUser!.getIdToken(true);
-          AppPreferences.setAuthToken(newToken);
+          if (newToken != null) {
+            AppPreferences.setAuthToken(newToken);
+          }
         }
       },
     );
