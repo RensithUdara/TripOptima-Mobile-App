@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 import 'package:trip_optima_mobile_app/utils/app_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -24,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               // Appearance section
               _buildSectionHeader('Appearance'),
-              
+
               // Theme mode
               ListTile(
                 title: const Text('Theme'),
@@ -32,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: const Icon(Icons.brightness_6),
                 onTap: () => _showThemePicker(context, uiProvider),
               ),
-              
+
               // Use animations
               SwitchListTile(
                 title: const Text('Use Animations'),
@@ -44,10 +43,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   await AppPreferences.setUseAnimations(value);
                 },
               ),
-              
+
               // Preferences section
               _buildSectionHeader('Preferences'),
-              
+
               // Language
               ListTile(
                 title: const Text('Language'),
@@ -55,20 +54,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: const Icon(Icons.language),
                 onTap: () => _showLanguagePicker(context, uiProvider),
               ),
-              
+
               // Measurement units
               ListTile(
                 title: const Text('Measurement Units'),
-                subtitle: Text(
-                  uiProvider.measurementUnit == 'metric' ? 'Metric (km, °C)' : 'Imperial (mi, °F)'
-                ),
+                subtitle: Text(uiProvider.measurementUnit == 'metric'
+                    ? 'Metric (km, °C)'
+                    : 'Imperial (mi, °F)'),
                 leading: const Icon(Icons.straighten),
                 onTap: () => _showUnitsPicker(context, uiProvider),
               ),
-              
+
               // Account section
               _buildSectionHeader('Account'),
-              
+
               // Change password
               ListTile(
                 title: const Text('Change Password'),
@@ -78,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamed(context, '/change-password');
                 },
               ),
-              
+
               // Privacy settings
               ListTile(
                 title: const Text('Privacy Settings'),
@@ -88,10 +87,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamed(context, '/privacy-settings');
                 },
               ),
-              
+
               // Data section
               _buildSectionHeader('Data'),
-              
+
               // Clear cache
               ListTile(
                 title: const Text('Clear Cache'),
@@ -99,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: const Icon(Icons.cleaning_services_outlined),
                 onTap: () => _showClearCacheDialog(context),
               ),
-              
+
               // Export data
               ListTile(
                 title: const Text('Export Data'),
@@ -109,10 +108,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // Handle export data
                 },
               ),
-              
+
               // About section
               _buildSectionHeader('About'),
-              
+
               // About app
               ListTile(
                 title: const Text('About TripOptima'),
@@ -122,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamed(context, '/about');
                 },
               ),
-              
+
               // Help & Support
               ListTile(
                 title: const Text('Help & Support'),
@@ -132,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pushNamed(context, '/help-support');
                 },
               ),
-              
+
               // Log out
               ListTile(
                 title: const Text(
@@ -145,7 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 onTap: () => _showLogoutDialog(context),
               ),
-              
+
               // App version
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -161,7 +160,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  
+
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
@@ -175,7 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  
+
   String _getThemeModeText(ThemeMode themeMode) {
     switch (themeMode) {
       case ThemeMode.light:
@@ -186,7 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return 'System Default';
     }
   }
-  
+
   String _getLanguageText(String languageCode) {
     switch (languageCode) {
       case 'en':
@@ -207,8 +206,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return 'English';
     }
   }
-  
-  Future<void> _showThemePicker(BuildContext context, UIProvider uiProvider) async {
+
+  Future<void> _showThemePicker(
+      BuildContext context, UIProvider uiProvider) async {
     final result = await showDialog<ThemeMode>(
       context: context,
       builder: (context) {
@@ -240,13 +240,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
-    
+
     if (result != null) {
       uiProvider.setThemeMode(result);
       await AppPreferences.setThemeMode(result);
     }
   }
-  
+
   Widget _buildThemeOption({
     required BuildContext context,
     required String title,
@@ -270,8 +270,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  
-  Future<void> _showLanguagePicker(BuildContext context, UIProvider uiProvider) async {
+
+  Future<void> _showLanguagePicker(
+      BuildContext context, UIProvider uiProvider) async {
     final result = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -306,17 +307,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
-    
+
     if (result != null) {
       // TODO: Implement language change
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Language support will be available in a future update'),
+          content:
+              Text('Language support will be available in a future update'),
         ),
       );
     }
   }
-  
+
   Widget _buildLanguageOption({
     required BuildContext context,
     required String title,
@@ -338,8 +340,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  
-  Future<void> _showUnitsPicker(BuildContext context, UIProvider uiProvider) async {
+
+  Future<void> _showUnitsPicker(
+      BuildContext context, UIProvider uiProvider) async {
     final result = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -380,14 +383,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
-    
+
     if (result != null) {
       await AppPreferences.setMeasurementUnit(result);
       // Update the UI provider
       uiProvider.setMeasurementUnit(result);
     }
   }
-  
+
   Future<void> _showClearCacheDialog(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
@@ -408,7 +411,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
-    
+
     if (result == true) {
       // Show loading
       ScaffoldMessenger.of(context).showSnackBar(
@@ -417,10 +420,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           duration: Duration(seconds: 1),
         ),
       );
-      
+
       // Simulate cache clearing
       await Future.delayed(const Duration(seconds: 1));
-      
+
       // Show success
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -432,7 +435,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
   }
-  
+
   Future<void> _showLogoutDialog(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
@@ -454,14 +457,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
-    
+
     if (result == true) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       await authProvider.logout();
-      
+
       if (mounted) {
         // Navigate to login screen
-        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
       }
     }
   }
