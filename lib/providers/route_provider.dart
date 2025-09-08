@@ -99,6 +99,37 @@ class RouteProvider with ChangeNotifier {
     }
   }
   
+  // Load route for a specific trip
+  Future<RouteModel?> loadRouteForTrip(String tripId) async {
+    _setLoading(true);
+    _clearError();
+    
+    try {
+      // Check if we have this route cached by tripId
+      final cachedRoute = _cachedRoutes.entries
+          .where((entry) => entry.value.tripId == tripId)
+          .map((entry) => entry.value)
+          .firstOrNull;
+      
+      if (cachedRoute != null) {
+        _currentRoute = cachedRoute;
+        _setLoading(false);
+        return cachedRoute;
+      }
+      
+      // If not cached, we need to calculate the route
+      // This would typically involve fetching the trip first
+      // For now, we'll just return null
+      
+      _setLoading(false);
+      return null;
+    } catch (e) {
+      _handleError('Failed to load route: ${e.toString()}');
+      _setLoading(false);
+      return null;
+    }
+  }
+  
   // Calculate alternative routes
   Future<List<RouteModel>> calculateAlternativeRoutes(
     LocationModel origin,

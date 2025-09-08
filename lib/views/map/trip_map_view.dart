@@ -193,7 +193,10 @@ class _TripMapViewState extends State<TripMapView> {
     final polyline = Polyline(
       polylineId: const PolylineId('trip_route'),
       points: route.polylinePoints
-          .map((point) => LatLng(point.latitude, point.longitude))
+          .map((point) => LatLng(
+                point[0] as double, // latitude
+                point[1] as double, // longitude
+              ))
           .toList(),
       color: Theme.of(context).colorScheme.primary,
       width: 4,
