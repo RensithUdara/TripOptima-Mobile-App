@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
-import 'package:trip_optima_mobile_app/models/weather_model.dart';
-import                    ...List.generate(
-                    forecast?.length != null ? (forecast!.length > 5 ? 5 : forecast.length) : 0,
-                    (index) {ackage:trip_optima_mobile_app/providers/weather_provider.dart';
+import 'package:trip_optima_mobile_app/providers/weather_provider.dart';
 
 class TripWeatherView extends StatefulWidget {
   final TripModel trip;
@@ -259,8 +256,8 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                   ...List.generate(
                     forecast.length > 5 ? 5 : forecast.length,
                     (index) {
-                      final day = forecast[index];
-                      final date = day?.timestamp ?? DateTime.now();
+                      final day = forecast.values.toList()[index];
+                      final date = day.timestamp;
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
