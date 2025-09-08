@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/models/weather_model.dart';
@@ -9,9 +8,9 @@ class TripWeatherView extends StatefulWidget {
   final TripModel trip;
 
   const TripWeatherView({
-    Key? key,
+    super.key,
     required this.trip,
-  }) : super(key: key);
+  });
 
   @override
   State<TripWeatherView> createState() => _TripWeatherViewState();
@@ -30,10 +29,12 @@ class _TripWeatherViewState extends State<TripWeatherView> {
   Future<void> _fetchWeatherData() async {
     if (widget.trip.destinations.isEmpty) return;
 
-    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
-    
+    final weatherProvider =
+        Provider.of<WeatherProvider>(context, listen: false);
+
     try {
-      final selectedDestination = widget.trip.destinations[_selectedDestinationIndex];
+      final selectedDestination =
+          widget.trip.destinations[_selectedDestinationIndex];
       await weatherProvider.getWeatherForecast(
         selectedDestination.latitude,
         selectedDestination.longitude,
@@ -54,17 +55,15 @@ class _TripWeatherViewState extends State<TripWeatherView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (widget.trip.destinations.length > 1)
-          _buildDestinationSelector(),
-        
+        if (widget.trip.destinations.length > 1) _buildDestinationSelector(),
         Expanded(
           child: Consumer<WeatherProvider>(
             builder: (context, weatherProvider, _) {
               if (weatherProvider.isLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
-              
-              if (weatherProvider.weatherData == null || 
+
+              if (weatherProvider.weatherData == null ||
                   weatherProvider.forecast == null ||
                   weatherProvider.forecast!.isEmpty) {
                 return Center(
@@ -74,7 +73,10 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                       Icon(
                         Icons.cloud_off,
                         size: 64,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -92,7 +94,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                   ),
                 );
               }
-              
+
               return _buildWeatherContent(weatherProvider);
             },
           ),
@@ -100,7 +102,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
       ],
     );
   }
-  
+
   Widget _buildDestinationSelector() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -111,7 +113,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
           children: List.generate(widget.trip.destinations.length, (index) {
             final destination = widget.trip.destinations[index];
             final isSelected = index == _selectedDestinationIndex;
-            
+
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: ChoiceChip(
@@ -130,12 +132,13 @@ class _TripWeatherViewState extends State<TripWeatherView> {
       ),
     );
   }
-  
+
   Widget _buildWeatherContent(WeatherProvider weatherProvider) {
     final currentWeather = weatherProvider.weatherData!;
     final forecast = weatherProvider.forecast!;
-    final selectedDestination = widget.trip.destinations[_selectedDestinationIndex];
-    
+    final selectedDestination =
+        widget.trip.destinations[_selectedDestinationIndex];
+
     return RefreshIndicator(
       onRefresh: _fetchWeatherData,
       child: ListView(
@@ -167,7 +170,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                   ),
                   const Divider(),
                   const SizedBox(height: 16),
-                  
+
                   // Current weather
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,7 +197,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                           ),
                         ],
                       ),
-                      
+
                       // Weather icon
                       Icon(
                         _getWeatherIcon(currentWeather.condition),
@@ -203,11 +206,11 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
                   const Divider(),
                   const SizedBox(height: 8),
-                  
+
                   // Weather details
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -225,7 +228,8 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                       _buildWeatherDetail(
                         icon: Icons.visibility,
                         label: 'Visibility',
-                        value: '${(currentWeather.visibility / 1000).toStringAsFixed(1)} km',
+                        value:
+                            '${(currentWeather.visibility / 1000).toStringAsFixed(1)} km',
                       ),
                     ],
                   ),
@@ -233,9 +237,9 @@ class _TripWeatherViewState extends State<TripWeatherView> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Daily forecast
           Card(
             child: Padding(
@@ -249,13 +253,13 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                   ),
                   const Divider(),
                   const SizedBox(height: 8),
-                  
                   ...List.generate(
                     forecast.length > 5 ? 5 : forecast.length,
                     (index) {
                       final day = forecast[index];
-                      final date = DateTime.fromMillisecondsSinceEpoch(day.date * 1000);
-                      
+                      final date =
+                          DateTime.fromMillisecondsSinceEpoch(day.date * 1000);
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Row(
@@ -264,35 +268,42 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                             SizedBox(
                               width: 100,
                               child: Text(
-                                index == 0 ? 'Today' : DateFormat('EEEE').format(date),
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                index == 0
+                                    ? 'Today'
+                                    : DateFormat('EEEE').format(date),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            
+
                             // Icon
                             Icon(
                               _getWeatherIcon(day.condition),
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             const SizedBox(width: 16),
-                            
+
                             // Description
                             Expanded(
                               child: Text(day.description),
                             ),
-                            
+
                             // Temperature
                             Row(
                               children: [
                                 Text(
                                   '${day.maxTemp.toStringAsFixed(0)}°',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   '${day.minTemp.toStringAsFixed(0)}°',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.7),
                                   ),
                                 ),
                               ],
@@ -306,9 +317,9 @@ class _TripWeatherViewState extends State<TripWeatherView> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Hourly forecast
           Card(
             child: Padding(
@@ -322,18 +333,17 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                   ),
                   const Divider(),
                   const SizedBox(height: 8),
-                  
                   SizedBox(
                     height: 120,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: weatherProvider.hourlyForecast?.length ?? 0,
                       itemBuilder: (context, index) {
-                        final hourlyData = weatherProvider.hourlyForecast![index];
+                        final hourlyData =
+                            weatherProvider.hourlyForecast![index];
                         final hour = DateTime.fromMillisecondsSinceEpoch(
-                          hourlyData.timestamp * 1000
-                        );
-                        
+                            hourlyData.timestamp * 1000);
+
                         return Container(
                           width: 80,
                           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -342,21 +352,23 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                               // Hour
                               Text(
                                 DateFormat('h a').format(hour),
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
-                              
+
                               // Icon
                               Icon(
                                 _getWeatherIcon(hourlyData.condition),
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                               const SizedBox(height: 8),
-                              
+
                               // Temperature
                               Text(
                                 '${hourlyData.temperature.toStringAsFixed(0)}°C',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -368,7 +380,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
               ),
             ),
           ),
-          
+
           // Weather note
           const SizedBox(height: 16),
           Text(
@@ -380,7 +392,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
       ),
     );
   }
-  
+
   Widget _buildWeatherDetail({
     required IconData icon,
     required String label,
@@ -405,7 +417,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
       ],
     );
   }
-  
+
   IconData _getWeatherIcon(String condition) {
     switch (condition.toLowerCase()) {
       case 'clear':
