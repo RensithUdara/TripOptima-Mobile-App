@@ -466,7 +466,22 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
       );
 
       // Add the trip
-      await tripProvider.createTrip(newTrip);
+      await tripProvider.createTrip(
+        name: _nameController.text,
+        userId: "current_user_id", // This would normally come from the AuthProvider
+        description: _descriptionController.text,
+        startDate: _startDate,
+        endDate: _endDate,
+        startLocation: _selectedDestinations.isNotEmpty
+            ? _selectedDestinations.first
+            : LocationModel(
+                id: "default",
+                name: "Starting Point",
+                latitude: 0,
+                longitude: 0,
+                placeId: "default_place"),
+        destinations: _selectedDestinations,
+      );
 
       // Show success message
       uiProvider.showSnackBar(
