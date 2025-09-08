@@ -43,8 +43,11 @@ class MyApp extends StatelessWidget {
             home: const SplashScreen(),
             routes: {
               '/login': (context) => const LoginScreen(),
+              '/register': (context) => const RegisterScreen(),
               '/home': (context) => const HomeScreen(),
+              '/create-trip': (context) => const CreateTripScreen(),
             },
+            scaffoldMessengerKey: uiProvider.scaffoldMessengerKey,
           );
         },
       ),
