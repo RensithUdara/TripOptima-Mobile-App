@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:provider/provider.dart';
 
 import 'package:trip_optima_mobile_app/constants/app_config.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
-import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
