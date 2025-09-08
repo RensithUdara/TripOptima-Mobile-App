@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/providers/route_provider.dart';
@@ -10,48 +9,50 @@ import 'package:trip_optima_mobile_app/views/weather/trip_weather_view.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final TripModel trip;
-  
+
   const TripDetailsScreen({
-    Key? key,
+    super.key,
     required this.trip,
-  }) : super(key: key);
+  });
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
 }
 
-class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTickerProviderStateMixin {
+class _TripDetailsScreenState extends State<TripDetailsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = false;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    
+
     // Load trip data when the screen initializes
     _loadTripData();
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _loadTripData() async {
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       // Get providers
       final routeProvider = Provider.of<RouteProvider>(context, listen: false);
-      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
-      
+      final weatherProvider =
+          Provider.of<WeatherProvider>(context, listen: false);
+
       // Load route information
       await routeProvider.loadRouteForTrip(widget.trip.id);
-      
+
       // Load weather information
       if (widget.trip.destinations.isNotEmpty) {
         await weatherProvider.getWeatherForecast(
@@ -142,7 +143,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                   ],
                   indicatorColor: Theme.of(context).colorScheme.primary,
                   labelColor: Theme.of(context).colorScheme.primary,
-                  unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  unselectedLabelColor:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
               pinned: true,
@@ -172,9 +174,9 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       ),
     );
   }
-  
+
   Widget _buildHeaderImage() {
-    if (widget.trip.metadata['coverImageUrl'] != null && 
+    if (widget.trip.metadata['coverImageUrl'] != null &&
         widget.trip.metadata['coverImageUrl'].isNotEmpty) {
       return Image.network(
         widget.trip.metadata['coverImageUrl'],
@@ -186,7 +188,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
     }
     return _buildDefaultHeaderBackground();
   }
-  
+
   Widget _buildDefaultHeaderBackground() {
     return Container(
       decoration: BoxDecoration(
@@ -208,17 +210,16 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       ),
     );
   }
-  
+
   Widget _buildOverviewTab() {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Trip score card
-        if (widget.trip.tripScore != null)
-          _buildScoreCard(),
-          
+        if (widget.trip.tripScore != null) _buildScoreCard(),
+
         const SizedBox(height: 16),
-        
+
         // Trip summary
         Card(
           child: Padding(
@@ -235,7 +236,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                 ),
                 const Divider(),
                 const SizedBox(height: 8),
-                
+
                 // Trip dates
                 Row(
                   children: [
@@ -243,14 +244,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        _formatDateRange(widget.trip.startDate, widget.trip.endDate),
+                        _formatDateRange(
+                            widget.trip.startDate, widget.trip.endDate),
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Trip duration
                 Row(
                   children: [
@@ -263,7 +265,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                   ],
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Trip destinations
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,20 +282,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                           ),
                           const SizedBox(height: 4),
                           ...widget.trip.destinations.map((location) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: Text(
-                              '• ${location.name}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-                              ),
-                            ),
-                          )).toList(),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
+                                child: Text(
+                                  '• ${location.name}',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.8),
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
                     ),
                   ],
                 ),
-                
+
                 if (widget.trip.description.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   const Divider(),
@@ -301,7 +307,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                   Text(
                     widget.trip.description,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.8),
                     ),
                   ),
                 ],
@@ -309,22 +318,22 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Weather overview
         Consumer<WeatherProvider>(
           builder: (context, weatherProvider, _) {
             if (weatherProvider.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (weatherProvider.weatherData == null) {
               return const SizedBox.shrink();
             }
-            
+
             final currentWeather = weatherProvider.weatherData!;
-            
+
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -345,7 +354,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            _tabController.animateTo(3); // Navigate to Weather tab
+                            _tabController
+                                .animateTo(3); // Navigate to Weather tab
                           },
                           child: const Text('View Details'),
                         ),
@@ -353,7 +363,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                     ),
                     const Divider(),
                     const SizedBox(height: 8),
-                    
+
                     // Weather summary
                     ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -373,7 +383,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                         currentWeather.description,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.8),
                         ),
                       ),
                     ),
@@ -383,22 +396,22 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
             );
           },
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Route summary
         Consumer<RouteProvider>(
           builder: (context, routeProvider, _) {
             if (routeProvider.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (routeProvider.currentRoute == null) {
               return const SizedBox.shrink();
             }
-            
+
             final route = routeProvider.currentRoute!;
-            
+
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -427,7 +440,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                     ),
                     const Divider(),
                     const SizedBox(height: 8),
-                    
+
                     // Route details
                     Row(
                       children: [
@@ -440,7 +453,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                       ],
                     ),
                     const SizedBox(height: 12),
-                    
+
                     Row(
                       children: [
                         const Icon(Icons.timer),
@@ -460,17 +473,17 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       ],
     );
   }
-  
+
   Widget _buildItineraryTab() {
     // This would fetch and display the trip's itinerary/activities
     return const Center(
       child: Text('Itinerary will be displayed here'),
     );
   }
-  
+
   Widget _buildScoreCard() {
     final score = widget.trip.tripScore!;
-    
+
     return Card(
       color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
       child: Padding(
@@ -508,7 +521,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
                   Text(
                     _getScoreTips(score),
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.8),
                     ),
                   ),
                 ],
@@ -519,13 +535,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       ),
     );
   }
-  
+
   Future<void> _duplicateTrip() async {
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
-    
+
     try {
       await tripProvider.duplicateTrip(widget.trip.id);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -545,13 +561,14 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       }
     }
   }
-  
+
   Future<void> _confirmDeleteTrip() async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Trip'),
-        content: Text('Are you sure you want to delete "${widget.trip.name}"? This action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete "${widget.trip.name}"? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -567,13 +584,13 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
         ],
       ),
     );
-    
+
     if (result == true) {
       final tripProvider = Provider.of<TripProvider>(context, listen: false);
-      
+
       try {
         await tripProvider.deleteTrip(widget.trip.id);
-        
+
         if (mounted) {
           Navigator.pop(context); // Go back to previous screen
         }
@@ -589,7 +606,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
       }
     }
   }
-  
+
   String _formatDateRange(DateTime start, DateTime? end) {
     final formatter = DateFormat('MMM d, yyyy');
     if (end == null || start == end) {
@@ -597,21 +614,21 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
     }
     return '${formatter.format(start)} - ${formatter.format(end)}';
   }
-  
+
   int _calculateDuration(DateTime start, DateTime? end) {
     if (end == null) {
       return 1;
     }
     return end.difference(start).inDays + 1;
   }
-  
+
   String _formatDuration(int seconds) {
     final hours = seconds ~/ 3600;
     final minutes = (seconds % 3600) ~/ 60;
-    
+
     return '$hours hr ${minutes.toString().padLeft(2, '0')} min';
   }
-  
+
   IconData _getWeatherIcon(String condition) {
     switch (condition.toLowerCase()) {
       case 'clear':
@@ -641,7 +658,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
         return Icons.wb_cloudy;
     }
   }
-  
+
   Color _getScoreColor(double score) {
     if (score >= 9) return Colors.green;
     if (score >= 7) return Colors.lightGreen;
@@ -649,7 +666,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
     if (score >= 3) return Colors.orange;
     return Colors.red;
   }
-  
+
   String _getScoreDescription(double score) {
     if (score >= 9) return 'Excellent Trip Plan';
     if (score >= 7) return 'Very Good Trip Plan';
@@ -657,35 +674,38 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> with SingleTicker
     if (score >= 3) return 'Fair Trip Plan';
     return 'Needs Improvement';
   }
-  
+
   String _getScoreTips(double score) {
     if (score >= 9) return 'Perfect balance of activities, routes, and timing!';
     if (score >= 7) return 'Great plan with minor improvements possible.';
-    if (score >= 5) return 'Consider optimizing your route or adding rest days.';
-    if (score >= 3) return 'Review your timing and distances between destinations.';
+    if (score >= 5)
+      return 'Consider optimizing your route or adding rest days.';
+    if (score >= 3)
+      return 'Review your timing and distances between destinations.';
     return 'Consider reworking your plan for better experience.';
   }
 }
 
 class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
-  
+
   _SliverTabBarDelegate(this.tabBar);
-  
+
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: tabBar,
     );
   }
-  
+
   @override
   double get maxExtent => tabBar.preferredSize.height;
-  
+
   @override
   double get minExtent => tabBar.preferredSize.height;
-  
+
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
     return false;

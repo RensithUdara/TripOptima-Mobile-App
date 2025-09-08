@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 import 'package:trip_optima_mobile_app/views/auth/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -15,10 +14,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _rememberMe = false;
-  
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -48,25 +47,31 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Title
                       Text(
                         'Welcome Back',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
-                      
+
                       // Subtitle
                       Text(
                         'Sign in to continue',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
+                            ),
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Email field
                       TextFormField(
                         controller: _emailController,
@@ -89,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Password field
                       TextFormField(
                         controller: _passwordController,
@@ -99,7 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
                             ),
                             onPressed: () {
                               setState(() {
@@ -122,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       const SizedBox(height: 8),
-                      
+
                       // Remember me and forgot password
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               const Text('Remember me'),
                             ],
                           ),
-                          
+
                           // Forgot password
                           TextButton(
                             onPressed: () {
@@ -152,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Login button
                       SizedBox(
                         width: double.infinity,
@@ -178,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Or sign in with
                       Row(
                         children: [
@@ -188,7 +195,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               'Or sign in with',
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withOpacity(0.7),
                               ),
                             ),
                           ),
@@ -196,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Social login buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -208,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () => _handleGoogleLogin(authProvider),
                           ),
                           const SizedBox(width: 16),
-                          
+
                           // Facebook
                           _socialLoginButton(
                             icon: Icons.facebook,
@@ -220,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Register link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -228,7 +238,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             'Don\'t have an account?',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
                             ),
                           ),
                           TextButton(
@@ -244,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      
+
                       // Error message
                       if (authProvider.status == AuthStatus.error)
                         Container(
@@ -256,11 +269,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.error_outline, color: Colors.red),
+                              const Icon(Icons.error_outline,
+                                  color: Colors.red),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  authProvider.errorMessage ?? 'An error occurred',
+                                  authProvider.errorMessage ??
+                                      'An error occurred',
                                   style: const TextStyle(color: Colors.red),
                                 ),
                               ),
@@ -304,24 +319,24 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin(AuthProvider authProvider) async {
     // Hide keyboard
     FocusScope.of(context).unfocus();
-    
+
     // Validate form
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    
+
     // Get UI provider for loading state
     final uiProvider = Provider.of<UIProvider>(context, listen: false);
     uiProvider.showLoading();
-    
+
     // Attempt login
     final success = await authProvider.loginWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text,
     );
-    
+
     uiProvider.hideLoading();
-    
+
     if (success && mounted) {
       // Navigate to home screen
       Navigator.of(context).pushReplacementNamed('/home');
@@ -332,12 +347,12 @@ class _LoginScreenState extends State<LoginScreen> {
     // Get UI provider for loading state
     final uiProvider = Provider.of<UIProvider>(context, listen: false);
     uiProvider.showLoading();
-    
+
     // Attempt Google login
     final success = await authProvider.loginWithGoogle();
-    
+
     uiProvider.hideLoading();
-    
+
     if (success && mounted) {
       // Navigate to home screen
       Navigator.of(context).pushReplacementNamed('/home');

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:trip_optima_mobile_app/models/user_model.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
 import 'package:trip_optima_mobile_app/providers/trip_provider.dart';
 import 'package:trip_optima_mobile_app/views/profile/settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -14,36 +14,35 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = false;
-  
+
   @override
   void initState() {
     super.initState();
     // Load user profile data
     _loadUserData();
   }
-  
+
   Future<void> _loadUserData() async {
     if (mounted) {
       setState(() {
         _isLoading = true;
       });
     }
-    
+
     try {
       // Get auth provider
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
+
       // Make sure user data is loaded
       if (authProvider.currentUser == null) {
         await authProvider.getUserProfile();
       }
-      
+
       // Get trip provider
       final tripProvider = Provider.of<TripProvider>(context, listen: false);
-      
+
       // Load user's trips statistics
       await tripProvider.loadUserTripsStats();
-      
     } catch (e) {
       // Show error
       if (mounted) {
@@ -69,21 +68,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           final user = authProvider.currentUser;
-          
+
           if (_isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (user == null) {
             return _buildNotLoggedInView();
           }
-          
+
           return _buildProfileView(user);
         },
       ),
     );
   }
-  
+
   Widget _buildNotLoggedInView() {
     return Center(
       child: Column(
@@ -112,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   Widget _buildProfileView(UserModel user) {
     return CustomScrollView(
       slivers: [
@@ -149,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-        
+
         // Profile content
         SliverToBoxAdapter(
           child: Column(
@@ -175,31 +174,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // User name
               Text(
                 user.displayName ?? 'User',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              
+
               // Email
               Text(
                 user.email ?? '',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Member since
               Text(
                 'Member since ${_formatDate(user.createdAt)}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Stats section
               Consumer<TripProvider>(
                 builder: (context, tripProvider, _) {
@@ -217,13 +219,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildStatCard(
                           context: context,
                           icon: Icons.location_on,
-                          value: tripProvider.tripStats.totalDestinations.toString(),
+                          value: tripProvider.tripStats.totalDestinations
+                              .toString(),
                           label: 'Places',
                         ),
                         _buildStatCard(
-                          context: context, 
+                          context: context,
                           icon: Icons.public,
-                          value: tripProvider.tripStats.totalCountries.toString(),
+                          value:
+                              tripProvider.tripStats.totalCountries.toString(),
                           label: 'Countries',
                         ),
                       ],
@@ -231,12 +235,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Divider
               const Divider(),
-              
+
               // Edit profile button
               ListTile(
                 leading: const Icon(Icons.edit),
@@ -245,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.pushNamed(context, '/edit-profile');
                 },
               ),
-              
+
               // Travel preferences
               ListTile(
                 leading: const Icon(Icons.favorite),
@@ -254,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.pushNamed(context, '/travel-preferences');
                 },
               ),
-              
+
               // Saved places
               ListTile(
                 leading: const Icon(Icons.bookmark),
@@ -263,8 +267,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context, tripProvider, _) {
                     return tripProvider.savedPlaces.isNotEmpty
                         ? Chip(
-                            label: Text(tripProvider.savedPlaces.length.toString()),
-                            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            label: Text(
+                                tripProvider.savedPlaces.length.toString()),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
                           )
                         : null;
                   },
@@ -273,20 +279,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.pushNamed(context, '/saved-places');
                 },
               ),
-              
+
               // Trip history
               ListTile(
                 leading: const Icon(Icons.history),
                 title: const Text('Trip History'),
                 onTap: () {
                   Navigator.pushNamed(
-                    context, 
+                    context,
                     '/trip-history',
                     arguments: {'userId': user.id},
                   );
                 },
               ),
-              
+
               // Settings
               ListTile(
                 leading: const Icon(Icons.settings),
@@ -300,7 +306,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
-              
+
               const SizedBox(height: 24),
             ],
           ),
@@ -308,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-  
+
   Widget _buildStatCard({
     required BuildContext context,
     required IconData icon,
@@ -345,13 +351,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   String _formatDate(DateTime? date) {
     if (date == null) return '';
-    
+
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays < 365) {
       return '${difference.inDays} days ago';
     } else {
