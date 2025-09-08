@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/models/weather_model.dart';
-import 'package:trip_optima_mobile_app/providers/weather_provider.dart';
+import                    ...List.generate(
+                    forecast?.length != null ? (forecast!.length > 5 ? 5 : forecast.length) : 0,
+                    (index) {ackage:trip_optima_mobile_app/providers/weather_provider.dart';
 
 class TripWeatherView extends StatefulWidget {
   final TripModel trip;
@@ -278,27 +280,27 @@ class _TripWeatherViewState extends State<TripWeatherView> {
 
                             // Icon
                             Icon(
-                              _getWeatherIcon(day.condition),
+                              _getWeatherIcon(day?.condition ?? 'Unknown'),
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             const SizedBox(width: 16),
 
                             // Description
                             Expanded(
-                              child: Text(day.description),
+                              child: Text(day?.description ?? 'No description'),
                             ),
 
                             // Temperature
                             Row(
                               children: [
                                 Text(
-                                  '${day.maxTemp.toStringAsFixed(0)}°',
+                                  '${day != null ? day.maxTemp.toStringAsFixed(0) : 'N/A'}°',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '${day.minTemp.toStringAsFixed(0)}°',
+                                  '${day != null ? day.minTemp.toStringAsFixed(0) : 'N/A'}°',
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -341,8 +343,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                       itemBuilder: (context, index) {
                         final hourlyData =
                             weatherProvider.hourlyForecast![index];
-                        final hour = DateTime.fromMillisecondsSinceEpoch(
-                            hourlyData.timestamp * 1000);
+                        final hour = hourlyData.timestamp;
 
                         return Container(
                           width: 80,
