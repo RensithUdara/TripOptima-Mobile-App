@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/constants/app_config.dart';
 import 'package:trip_optima_mobile_app/providers/app_providers.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
+import 'package:trip_optima_mobile_app/utils/app_preferences.dart' as prefs;
 import 'package:trip_optima_mobile_app/views/splash_screen.dart';
 import 'package:trip_optima_mobile_app/views/auth/login_screen.dart';
 import 'package:trip_optima_mobile_app/views/auth/register_screen.dart';
@@ -15,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize app preferences
-  await AppPreferences.init();
+  await prefs.AppPreferences.init();
   
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
