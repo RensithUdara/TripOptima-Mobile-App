@@ -21,7 +21,7 @@ class TripProvider with ChangeNotifier {
     _loadTrips();
   }
   
-  // Load trips from storage or API
+  // Load trips from storage or API (internal implementation)
   Future<void> _loadTrips() async {
     _setLoading(true);
     
@@ -34,6 +34,11 @@ class TripProvider with ChangeNotifier {
     } catch (e) {
       _handleError('Failed to load trips: ${e.toString()}');
     }
+  }
+  
+  // Public method to reload trips
+  Future<void> loadTrips() async {
+    await _loadTrips();
   }
   
   // Create a new trip
