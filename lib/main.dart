@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'package:trip_optima_mobile_app/constants/app_config.dart';
+import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/providers/app_providers.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 import 'package:trip_optima_mobile_app/utils/app_preferences.dart' as prefs;
@@ -10,6 +12,14 @@ import 'package:trip_optima_mobile_app/views/auth/login_screen.dart';
 import 'package:trip_optima_mobile_app/views/auth/register_screen.dart';
 import 'package:trip_optima_mobile_app/views/home_screen.dart';
 import 'package:trip_optima_mobile_app/views/trips/create_trip_screen.dart';
+import 'package:trip_optima_mobile_app/views/trips/details/trip_details_screen.dart';
+import 'package:trip_optima_mobile_app/views/explore/search_screen.dart';
+import 'package:trip_optima_mobile_app/views/explore/favorite_locations_screen.dart';
+import 'package:trip_optima_mobile_app/views/notifications/notifications_screen.dart';
+import 'package:trip_optima_mobile_app/views/profile/profile_screen.dart';
+import 'package:trip_optima_mobile_app/views/profile/settings_screen.dart';
+import 'package:trip_optima_mobile_app/views/profile/about_screen.dart';
+import 'package:trip_optima_mobile_app/views/profile/help_support_screen.dart';
 
 void main() async {
   // Ensure Flutter is initialized
@@ -43,10 +53,38 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             home: const SplashScreen(),
             routes: {
+              // Auth routes
               '/login': (context) => const LoginScreen(),
               '/register': (context) => const RegisterScreen(),
+              
+              // Main screens
               '/home': (context) => const HomeScreen(),
+              
+              // Trip routes
               '/create-trip': (context) => const CreateTripScreen(),
+              
+              // Explore routes
+              '/search': (context) => const SearchScreen(),
+              '/favorite-locations': (context) => const FavoriteLocationsScreen(),
+              
+              // Notifications
+              '/notifications': (context) => const NotificationsScreen(),
+              
+              // Profile routes
+              '/profile': (context) => const ProfileScreen(),
+              '/settings': (context) => const SettingsScreen(),
+              '/about': (context) => const AboutScreen(),
+              '/help-support': (context) => const HelpSupportScreen(),
+            },
+            onGenerateRoute: (settings) {
+              // Handle routes that require arguments
+              if (settings.name == '/trip-details') {
+                final trip = settings.arguments as TripModel;
+                return MaterialPageRoute(
+                  builder: (context) => TripDetailsScreen(trip: trip),
+                );
+              }
+              return null;
             },
             scaffoldMessengerKey: uiProvider.scaffoldMessengerKey,
           );
