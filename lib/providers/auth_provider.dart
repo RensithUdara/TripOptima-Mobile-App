@@ -374,6 +374,24 @@ class AuthProvider with ChangeNotifier {
     }
   }
   
+  // Get user profile
+  Future<UserModel?> getUserProfile() async {
+    if (_firebaseAuth.currentUser == null) {
+      _handleError('No user is signed in');
+      return null;
+    }
+    
+    _clearError();
+    
+    try {
+      await _fetchUserData(_firebaseAuth.currentUser!.uid);
+      return _currentUser;
+    } catch (e) {
+      _handleError('Failed to get user profile: ${e.toString()}');
+      return null;
+    }
+  }
+
   // Delete user account
   Future<bool> deleteAccount(String password) async {
     if (_firebaseAuth.currentUser == null || _currentUser == null) {
