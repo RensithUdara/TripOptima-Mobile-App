@@ -52,17 +52,8 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _initializeApp() async {
     // Simulate loading time if needed
     await Future.delayed(const Duration(seconds: 2));
-
-    // Check authentication state and navigate accordingly
     if (!mounted) return;
-
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-    if (authProvider.isAuthenticated) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      Navigator.of(context).pushReplacementNamed('/login');
-    }
+    // Navigation will be handled by Consumer below
   }
 
   @override
@@ -79,52 +70,58 @@ class _SplashScreenState extends State<SplashScreen>
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: child,
-              ),
-            );
+            return Consumer<AuthProvider>(
+              builder: (context, authProvider, child) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (authProvider.status == AuthStatus.authenticated) {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  } else if (authProvider.status == AuthStatus.unauthenticated) {
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  }
+                });
+                return Scaffold(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  body: Center(
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: ScaleTransition(
+                            scale: _scaleAnimation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.travel_explore,
+                            size: 120,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            AppConfig.appName,
+                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          const SizedBox(height: 12),
+                          const CircularProgressIndicator(),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );  
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // App Logo
-              Icon(
-                Icons.travel_explore,
-                size: 120,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 20),
-              // App Name
-              Text(
-                AppConfig.appName,
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              // App tagline
-              Text(
-                'Intelligent Travel Planning',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
-                    ),
-              ),
-              const SizedBox(height: 40),
-              // Loading indicator
-              CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 }
+
