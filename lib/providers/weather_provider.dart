@@ -379,28 +379,12 @@ class WeatherProvider with ChangeNotifier {
     
     // Parse precipitation (if available)
     double rain = 0.0;
+    double snow = 0.0;
     if (data.containsKey('rain')) {
       rain = data['rain']?['1h']?.toDouble() ?? 0.0;
-    } else if (data.containsKey('snow')) {
-      precipitation = data['snow']?['1h']?.toDouble() ?? 0.0;
     }
-    
-    // Parse UV index (if available)
-    double uvIndex = 0.0;
-    if (data.containsKey('uvi')) {
-      uvIndex = data['uvi']?.toDouble() ?? 0.0;
-    }
-    
-    // Parse sunrise/sunset
-    DateTime sunrise;
-    DateTime sunset;
-    
-    if (data.containsKey('sys') && data['sys'].containsKey('sunrise')) {
-      sunrise = DateTime.fromMillisecondsSinceEpoch(data['sys']['sunrise'] * 1000);
-      sunset = DateTime.fromMillisecondsSinceEpoch(data['sys']['sunset'] * 1000);
-    } else {
-      sunrise = DateTime.now();
-      sunset = DateTime.now().add(const Duration(hours: 12));
+    if (data.containsKey('snow')) {
+      snow = data['snow']?['1h']?.toDouble() ?? 0.0;
     }
     
     // Create timestamp
