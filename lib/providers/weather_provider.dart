@@ -319,9 +319,10 @@ class WeatherProvider with ChangeNotifier {
       score -= ((5000 - weather.visibility) / 100).round();
     }
     
-    // UV Index factors
-    if (weather.uvIndex > 8) {
-      score -= ((weather.uvIndex - 8) * 5).round();
+    // UV Index factors - No longer available in our model
+    // Use humidity as a proxy for comfort
+    if (weather.humidity > 80) {
+      score -= ((weather.humidity - 80) * 2).round();
     }
     
     // Cap the score between 0 and 100
