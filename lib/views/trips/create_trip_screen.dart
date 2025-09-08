@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/models/location_model.dart';
-import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/providers/location_provider.dart';
 import 'package:trip_optima_mobile_app/providers/trip_provider.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
@@ -298,10 +297,6 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     // This would normally open a location search screen
     // For now, we'll just add a placeholder location
 
-    // Get the location provider
-    final locationProvider =
-        Provider.of<LocationProvider>(context, listen: false);
-
     // Show a loading dialog
     showDialog(
       context: context,
@@ -443,27 +438,7 @@ class _CreateTripScreenState extends State<CreateTripScreen> {
     final uiProvider = Provider.of<UIProvider>(context, listen: false);
 
     try {
-      // Create a new trip
-      final newTrip = TripModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(), // Temporary ID
-        name: _nameController.text,
-        description: _descriptionController.text,
-        startDate: _startDate,
-        endDate: _endDate,
-        userId:
-            "current_user_id", // This would normally come from the AuthProvider
-        startLocation: _selectedDestinations.isNotEmpty
-            ? _selectedDestinations.first
-            : LocationModel(
-                id: "default",
-                name: "Starting Point",
-                latitude: 0,
-                longitude: 0,
-                placeId: "default_place"),
-        destinations: _selectedDestinations,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      // We'll create the trip directly with the provider instead of creating a TripModel instance
 
       // Add the trip
       await tripProvider.createTrip(
