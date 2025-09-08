@@ -1,6 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+enum SnackBarType {
+  info,
+  success,
+  warning,
+  error,
+}
+
 class UIProvider with ChangeNotifier {
   // Theme state
   ThemeMode _themeMode = ThemeMode.system;
@@ -23,6 +30,10 @@ class UIProvider with ChangeNotifier {
   bool _useAnimations = true;
   String _languageCode = 'en';
   String _measurementUnit = 'metric'; // metric or imperial
+
+  // Global key for scaffold messenger
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = 
+      GlobalKey<ScaffoldMessengerState>();
   
   // Getters
   ThemeMode get themeMode => _themeMode;
@@ -97,6 +108,64 @@ class UIProvider with ChangeNotifier {
   void setCurrentNavIndex(int index) {
     _currentNavIndex = index;
     notifyListeners();
+  }
+
+  // SnackBar methods
+  void showSnackBar({
+    required String message,
+    SnackBarType type = SnackBarType.info,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    Color backgroundColor;
+    IconData icon;
+    
+    switch (type) {
+      case SnackBarType.success:
+        backgroundColor = Colors.green;
+        icon = Icons.check_circle;
+        break;
+      case SnackBarType.warning:
+        backgroundColor = Colors.orange;
+        icon = Icons.warning_amber_rounded;
+        break;
+      case SnackBarType.error:
+        backgroundColor = Colors.red;
+        icon = Icons.error;
+        break;
+      case SnackBarType.info:
+      default:
+        backgroundColor = Colors.blue;
+        icon = Icons.info;
+        break;
+    }
+    
+    // Create snackbar
+    final snackBar = SnackBar(
+      content: Row(
+        children: [
+          Icon(icon, color: Colors.white),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(message, style: const TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+      backgroundColor: backgroundColor,
+      duration: duration,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      action: SnackBarAction(
+        label: 'Dismiss',
+        textColor: Colors.white,
+        onPressed: () {
+          scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+        },
+      ),
+    );
+    
+    // Show snackbar
+    scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
   }
   
   // Modal methods
