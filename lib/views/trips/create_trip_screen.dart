@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/models/location_model.dart';
-import 'package:trip_optima_mobile_app/providers/location_provider.dart';
 import 'package:trip_optima_mobile_app/providers/trip_provider.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 
