@@ -183,6 +183,23 @@ class LocationProvider with ChangeNotifier {
     }
   }
   
+  // Search locations and update searchResults
+  Future<void> searchLocations(String query) async {
+    _isSearching = true;
+    _searchResults = [];
+    notifyListeners();
+    
+    try {
+      final results = await searchPlaces(query);
+      _searchResults = results;
+    } catch (e) {
+      _handleError('Search failed: ${e.toString()}');
+    } finally {
+      _isSearching = false;
+      notifyListeners();
+    }
+  }
+  
   // Get place suggestions (autocomplete)
   Future<void> getPlaceSuggestions(String query) async {
     if (query.isEmpty) {
