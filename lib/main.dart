@@ -6,7 +6,9 @@ import 'package:trip_optima_mobile_app/providers/app_providers.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 import 'package:trip_optima_mobile_app/views/splash_screen.dart';
 import 'package:trip_optima_mobile_app/views/auth/login_screen.dart';
-import 'package:trip_optima_mobile_app/views/home/home_screen.dart';
+import 'package:trip_optima_mobile_app/views/auth/register_screen.dart';
+import 'package:trip_optima_mobile_app/views/home_screen.dart';
+import 'package:trip_optima_mobile_app/views/trips/create_trip_screen.dart';
 
 void main() async {
   // Ensure Flutter is initialized
