@@ -258,8 +258,7 @@ class _TripWeatherViewState extends State<TripWeatherView> {
                     forecast.length > 5 ? 5 : forecast.length,
                     (index) {
                       final day = forecast[index];
-                      final date =
-                          DateTime.fromMillisecondsSinceEpoch(day.date * 1000);
+                      final date = day?.timestamp ?? DateTime.now();
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
