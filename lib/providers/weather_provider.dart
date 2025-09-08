@@ -411,21 +411,23 @@ class WeatherProvider with ChangeNotifier {
     // Create weather model
     return WeatherModel(
       id: _uuid.v4(),
-      location: location,
+      locationId: location.id,
       timestamp: timestamp,
-      condition: '$condition - $description',
+      condition: condition,
+      description: description,
+      icon: icon,
       temperature: temperature,
       feelsLike: feelsLike,
+      minTemp: temperature - 2.0, // Placeholder
+      maxTemp: temperature + 2.0, // Placeholder
       windSpeed: windSpeed,
-      windDirection: windDirection,
+      windDirection: windDirection.toDouble(),
       humidity: humidity,
-      precipitation: precipitation,
-      visibility: visibility,
-      uvIndex: uvIndex,
       pressure: pressure,
-      cloudCover: cloudCover,
-      sunrise: sunrise,
-      sunset: sunset,
+      visibility: visibility,
+      clouds: cloudCover.toDouble(),
+      rain: precipitation,
+      snow: 0.0, // Placeholder
     );
   }
   
