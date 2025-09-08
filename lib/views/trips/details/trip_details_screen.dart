@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:trip_optima_mobile_app/models/trip_model.dart';
 import 'package:trip_optima_mobile_app/providers/route_provider.dart';
 import 'package:trip_optima_mobile_app/providers/trip_provider.dart';

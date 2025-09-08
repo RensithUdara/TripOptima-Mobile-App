@@ -255,6 +255,24 @@ class LocationProvider with ChangeNotifier {
     _saveFavoriteLocations();
   }
   
+  // Toggle favorite status
+  Future<void> toggleFavorite(LocationModel location) async {
+    final index = _favoriteLocations.indexWhere((loc) => loc.id == location.id);
+    
+    if (index >= 0) {
+      // Remove if already in favorites
+      _favoriteLocations.removeAt(index);
+    } else {
+      // Add if not in favorites
+      _favoriteLocations.add(location);
+    }
+    
+    notifyListeners();
+    
+    // Save to local storage
+    _saveFavoriteLocations();
+  }
+  
   // Clear search history
   Future<void> clearSearchHistory() async {
     _searchHistory = [];
@@ -397,6 +415,39 @@ class LocationProvider with ChangeNotifier {
     // TODO: Implement loading from SharedPreferences
     // This is a placeholder - in a real app, you would load from local storage
     _favoriteLocations = [];
+    notifyListeners();
+  }
+  
+  // Load favorite locations by IDs
+  Future<void> loadFavoriteLocations(List<String> locationIds) async {
+    if (locationIds.isEmpty) {
+      _favoriteLocations = [];
+      notifyListeners();
+      return;
+    }
+    
+    _setLoading(true);
+    
+    try {
+      // In a real app, you would fetch these from an API or local database
+      // For now, we'll create placeholder locations
+      _favoriteLocations = locationIds.map((id) => LocationModel(
+        id: id,
+        name: 'Favorite Location $id',
+        latitude: 0.0,
+        longitude: 0.0,
+        address: 'Sample address for location $id',
+        timestamp: DateTime.now(),
+        imageUrl: 'https://picsum.photos/seed/$id/300/200',
+        tags: ['cities', 'nature'],
+      )).toList();
+      
+      notifyListeners();
+    } catch (e) {
+      _handleError('Failed to load favorite locations: ${e.toString()}');
+    } finally {
+      _setLoading(false);
+    }
   }
   
   Future<void> _saveFavoriteLocations() async {

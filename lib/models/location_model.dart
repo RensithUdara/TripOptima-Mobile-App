@@ -7,6 +7,8 @@ class LocationModel {
   final String? placeId;
   final Map<String, dynamic>? metadata;
   final DateTime? timestamp;
+  final String? imageUrl;
+  final List<String>? tags;
 
   LocationModel({
     required this.id,
@@ -17,6 +19,8 @@ class LocationModel {
     this.placeId,
     this.metadata,
     this.timestamp,
+    this.imageUrl,
+    this.tags,
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,8 @@ class LocationModel {
       timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'])
           : null,
+      imageUrl: json['imageUrl'],
+      tags: json['tags'] != null ? List<String>.from(json['tags']) : null,
     );
   }
 
@@ -44,6 +50,8 @@ class LocationModel {
       'placeId': placeId,
       'metadata': metadata,
       'timestamp': timestamp?.toIso8601String(),
+      'imageUrl': imageUrl,
+      'tags': tags,
     };
   }
 
@@ -56,6 +64,8 @@ class LocationModel {
     String? placeId,
     Map<String, dynamic>? metadata,
     DateTime? timestamp,
+    String? imageUrl,
+    List<String>? tags,
   }) {
     return LocationModel(
       id: id ?? this.id,
@@ -66,6 +76,8 @@ class LocationModel {
       placeId: placeId ?? this.placeId,
       metadata: metadata ?? this.metadata,
       timestamp: timestamp ?? this.timestamp,
+      imageUrl: imageUrl ?? this.imageUrl,
+      tags: tags ?? this.tags,
     );
   }
 }
