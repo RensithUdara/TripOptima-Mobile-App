@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+
 import 'package:trip_optima_mobile_app/constants/app_config.dart';
 import 'package:trip_optima_mobile_app/providers/app_providers.dart';
 import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
@@ -14,16 +14,16 @@ import 'package:trip_optima_mobile_app/views/trips/create_trip_screen.dart';
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize app preferences
   await prefs.AppPreferences.init();
-  
+
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
+
   runApp(const MyApp());
 }
 
