@@ -22,8 +22,10 @@ class LocationProvider with ChangeNotifier {
   List<LocationModel> _searchHistory = [];
   List<LocationModel> _favoriteLocations = [];
   List<AutocompletePrediction> _searchSuggestions = [];
+  List<LocationModel> _searchResults = [];
   
   bool _isLoading = false;
+  bool _isSearching = false;
   String? _errorMessage;
   LocationPermissionStatus _permissionStatus = LocationPermissionStatus.undetermined;
   
@@ -35,7 +37,9 @@ class LocationProvider with ChangeNotifier {
   List<LocationModel> get searchHistory => _searchHistory;
   List<LocationModel> get favoriteLocations => _favoriteLocations;
   List<AutocompletePrediction> get searchSuggestions => _searchSuggestions;
+  List<LocationModel> get searchResults => _searchResults;
   bool get isLoading => _isLoading;
+  bool get isSearching => _isSearching;
   String? get errorMessage => _errorMessage;
   LocationPermissionStatus get permissionStatus => _permissionStatus;
   
