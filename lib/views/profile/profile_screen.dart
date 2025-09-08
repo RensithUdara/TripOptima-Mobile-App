@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:trip_optima_mobile_app/models/user_model.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
