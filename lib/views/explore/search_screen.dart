@@ -4,7 +4,7 @@ import 'package:trip_optima_mobile_app/providers/location_provider.dart';
 import 'package:trip_optima_mobile_app/models/location_model.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -109,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
               'Enter a city, country, or point of interest to start exploring',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
           ),
@@ -140,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
               'Try a different search term or explore popular destinations',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
             ),
           ),
