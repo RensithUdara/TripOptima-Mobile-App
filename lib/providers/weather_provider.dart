@@ -10,6 +10,10 @@ class WeatherProvider with ChangeNotifier {
   Map<String, WeatherModel> _weatherCache = {};
   bool _isLoading = false;
   String? _errorMessage;
+  WeatherModel? _currentWeatherData;
+  Map<String, WeatherModel>? _forecast;
+  List<WeatherModel>? _hourlyForecast;
+  DateTime? _lastUpdated;
   
   final _uuid = const Uuid();
   
@@ -20,6 +24,10 @@ class WeatherProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   Map<String, WeatherModel> get weatherCache => _weatherCache;
+  WeatherModel? get weatherData => _currentWeatherData;
+  Map<String, WeatherModel>? get forecast => _forecast;
+  List<WeatherModel>? get hourlyForecast => _hourlyForecast;
+  DateTime? get lastUpdated => _lastUpdated;
   
   // Get current weather for a location
   Future<WeatherModel?> getCurrentWeather(LocationModel location) async {
@@ -452,6 +460,84 @@ class WeatherProvider with ChangeNotifier {
   void _handleError(String message) {
     _errorMessage = message;
     _isLoading = false;
+    notifyListeners();
+  }
+  
+  void _clearError() {
+    _errorMessage = null;
+  }
+  
+  // Get weather forecast for a specific location by coordinates
+  Future<void> getWeatherForecast(double latitude, double longitude) async {
+    _setLoading(true);
+    _clearError();
+    
+    try {
+      final location = LocationModel(
+        id: _uuid.v4(), 
+        name: 'Location', 
+        address: '', 
+        latitude: latitude, 
+        longitude: longitude,
+        placeId: '',
+        imageUrl: '',
+        tags: [],
+      );
+      
+      // Get current weather
+      _currentWeatherData = await getCurrentWeather(location);
+      
+      // Get daily forecast
+      _forecast = await getForecast(location, 7);
+      
+      // Get hourly forecast (simulated with current API)
+      await _fetchHourlyForecast(location);
+      
+      // Update last updated timestamp
+      _lastUpdated = DateTime.now();
+      
+      notifyListeners();
+    } catch (e) {
+      _handleError('Weather forecast error: ${e.toString()}');
+    } finally {
+      _setLoading(false);
+    }
+  }
+  
+  // Get hourly forecast for a location
+  Future<void> _fetchHourlyForecast(LocationModel location) async {
+    try {
+      // Build URL for hourly forecast API
+      final url = Uri.parse(
+        '${AppConfig.weatherApiBaseUrl}/forecast?'
+        'lat=${location.latitude}&lon=${location.longitude}'
+        '&cnt=24'  // 24 hours
+        '&units=metric'
+        '&appid=${AppConfig.weatherApiKey}'
+      );
+      
+      // Make request
+      final response = await http.get(url);
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<WeatherModel> hourly = [];
+        
+        // Parse hourly forecast data
+        for (var item in data['list']) {
+          final weather = _parseWeatherData(item, location);
+          hourly.add(weather);
+        }
+        
+        _hourlyForecast = hourly;
+      } else {
+        _hourlyForecast = [];
+      }
+    } catch (e) {
+      _hourlyForecast = [];
+      print('Error fetching hourly forecast: ${e.toString()}');
+    }
+  }
     notifyListeners();
   }
   
