@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:trip_optima_mobile_app/providers/auth_provider.dart';
 import 'package:trip_optima_mobile_app/providers/trip_provider.dart';
@@ -7,7 +6,7 @@ import 'package:trip_optima_mobile_app/providers/ui_provider.dart';
 import 'package:trip_optima_mobile_app/views/trips/create_trip_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -15,13 +14,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  
+
   final List<Widget> _pages = [
     const TripsPage(),
     const ExploreMapPage(),
     const ProfilePage(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class TripsPage extends StatefulWidget {
-  const TripsPage({Key? key}) : super(key: key);
+  const TripsPage({super.key});
 
   @override
   State<TripsPage> createState() => _TripsPageState();
@@ -72,7 +71,7 @@ class _TripsPageState extends State<TripsPage> {
       tripProvider.loadTrips();
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,11 +93,11 @@ class _TripsPageState extends State<TripsPage> {
               child: CircularProgressIndicator(),
             );
           }
-          
+
           if (tripProvider.trips.isEmpty) {
             return _buildEmptyState();
           }
-          
+
           return _buildTripsList(tripProvider);
         },
       ),
@@ -115,7 +114,7 @@ class _TripsPageState extends State<TripsPage> {
       ),
     );
   }
-  
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -135,7 +134,7 @@ class _TripsPageState extends State<TripsPage> {
           Text(
             'Create your first trip to get started',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
           const SizedBox(height: 24),
@@ -155,14 +154,14 @@ class _TripsPageState extends State<TripsPage> {
       ),
     );
   }
-  
+
   Widget _buildTripsList(TripProvider tripProvider) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: tripProvider.trips.length,
       itemBuilder: (context, index) {
         final trip = tripProvider.trips[index];
-        
+
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           clipBehavior: Clip.antiAlias,
@@ -174,7 +173,7 @@ class _TripsPageState extends State<TripsPage> {
             onTap: () {
               // Navigate to trip details
               Navigator.pushNamed(
-                context, 
+                context,
                 '/trip-details',
                 arguments: trip,
               );
@@ -185,18 +184,23 @@ class _TripsPageState extends State<TripsPage> {
                 // Trip image
                 AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: trip.metadata['coverImageUrl'] != null && trip.metadata['coverImageUrl'].isNotEmpty
+                  child: trip.metadata['coverImageUrl'] != null &&
+                          trip.metadata['coverImageUrl'].isNotEmpty
                       ? Image.network(
                           trip.metadata['coverImageUrl'],
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              color: Theme.of(context).colorScheme.primaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                               child: Center(
                                 child: Icon(
                                   Icons.image_not_supported_outlined,
                                   size: 40,
-                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
                                 ),
                               ),
                             );
@@ -208,12 +212,14 @@ class _TripsPageState extends State<TripsPage> {
                             child: Icon(
                               Icons.map,
                               size: 40,
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
                             ),
                           ),
                         ),
                 ),
-                
+
                 // Trip info
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -232,11 +238,12 @@ class _TripsPageState extends State<TripsPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          
+
                           // Trip score badge
                           if (trip.tripScore != null && trip.tripScore! > 0)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: _getTripScoreColor(trip.tripScore!),
                                 borderRadius: BorderRadius.circular(16),
@@ -262,7 +269,7 @@ class _TripsPageState extends State<TripsPage> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      
+
                       // Dates
                       Row(
                         children: [
@@ -278,7 +285,7 @@ class _TripsPageState extends State<TripsPage> {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      
+
                       // Locations
                       if (trip.destinations.isNotEmpty)
                         Row(
@@ -290,7 +297,9 @@ class _TripsPageState extends State<TripsPage> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                trip.destinations.map((loc) => loc.name).join(' → '),
+                                trip.destinations
+                                    .map((loc) => loc.name)
+                                    .join(' → '),
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -301,7 +310,7 @@ class _TripsPageState extends State<TripsPage> {
                     ],
                   ),
                 ),
-                
+
                 // Action buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -314,13 +323,13 @@ class _TripsPageState extends State<TripsPage> {
                         onPressed: () {
                           // Navigate to edit trip
                           Navigator.pushNamed(
-                            context, 
+                            context,
                             '/edit-trip',
                             arguments: trip,
                           );
                         },
                       ),
-                      
+
                       // Share button
                       IconButton(
                         icon: const Icon(Icons.share_outlined),
@@ -338,7 +347,7 @@ class _TripsPageState extends State<TripsPage> {
       },
     );
   }
-  
+
   Color _getTripScoreColor(double score) {
     if (score >= 9) return Colors.green;
     if (score >= 7) return Colors.lightGreen;
@@ -346,7 +355,7 @@ class _TripsPageState extends State<TripsPage> {
     if (score >= 3) return Colors.orange;
     return Colors.red;
   }
-  
+
   String _formatDateRange(DateTime start, DateTime? end) {
     final formatter = DateFormat('MMM d, yyyy');
     if (end == null || start == end) {
@@ -357,7 +366,7 @@ class _TripsPageState extends State<TripsPage> {
 }
 
 class ExploreMapPage extends StatelessWidget {
-  const ExploreMapPage({Key? key}) : super(key: key);
+  const ExploreMapPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +395,7 @@ class ExploreMapPage extends StatelessWidget {
               readOnly: true,
             ),
           ),
-          
+
           // Map (placeholder for now)
           Expanded(
             child: Container(
@@ -403,7 +412,7 @@ class ExploreMapPage extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +423,7 @@ class ProfilePage extends StatelessWidget {
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           final user = authProvider.currentUser;
-          
+
           if (user == null) {
             return Center(
               child: Column(
@@ -435,7 +444,7 @@ class ProfilePage extends StatelessWidget {
               ),
             );
           }
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -467,15 +476,18 @@ class ProfilePage extends StatelessWidget {
                       Text(
                         user.email ?? '',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
+                            ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Stats
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -500,9 +512,9 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Profile menu
                 _buildProfileMenuCard(
                   context: context,
@@ -512,7 +524,7 @@ class ProfilePage extends StatelessWidget {
                     // Navigate to account settings
                   },
                 ),
-                
+
                 _buildProfileMenuCard(
                   context: context,
                   title: 'Preferences',
@@ -521,7 +533,7 @@ class ProfilePage extends StatelessWidget {
                     // Navigate to preferences
                   },
                 ),
-                
+
                 _buildProfileMenuCard(
                   context: context,
                   title: 'Help & Support',
@@ -530,7 +542,7 @@ class ProfilePage extends StatelessWidget {
                     // Navigate to help
                   },
                 ),
-                
+
                 _buildProfileMenuCard(
                   context: context,
                   title: 'About TripOptima',
@@ -539,7 +551,7 @@ class ProfilePage extends StatelessWidget {
                     // Navigate to about
                   },
                 ),
-                
+
                 // Log out button
                 const SizedBox(height: 16),
                 SizedBox(
@@ -548,7 +560,8 @@ class ProfilePage extends StatelessWidget {
                     onPressed: () => _showLogoutDialog(context, authProvider),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: BorderSide(color: Theme.of(context).colorScheme.error),
+                      side: BorderSide(
+                          color: Theme.of(context).colorScheme.error),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -568,7 +581,7 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildProfileStat({
     required BuildContext context,
     required String label,
@@ -593,19 +606,19 @@ class ProfilePage extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         Text(
           label,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
         ),
       ],
     );
   }
-  
+
   Widget _buildProfileMenuCard({
     required BuildContext context,
     required String title,
@@ -622,7 +635,7 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-  
+
   Future<void> _showLogoutDialog(
     BuildContext context,
     AuthProvider authProvider,
