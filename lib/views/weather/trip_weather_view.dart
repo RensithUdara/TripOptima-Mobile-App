@@ -277,27 +277,27 @@ class _TripWeatherViewState extends State<TripWeatherView> {
 
                             // Icon
                             Icon(
-                              _getWeatherIcon(day?.condition ?? 'Unknown'),
+                              _getWeatherIcon(day.condition),
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             const SizedBox(width: 16),
 
                             // Description
                             Expanded(
-                              child: Text(day?.description ?? 'No description'),
+                              child: Text(day.description),
                             ),
 
                             // Temperature
                             Row(
                               children: [
                                 Text(
-                                  '${day != null ? day.maxTemp.toStringAsFixed(0) : 'N/A'}°',
+                                  '${day.maxTemp.toStringAsFixed(0)}°',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '${day != null ? day.minTemp.toStringAsFixed(0) : 'N/A'}°',
+                                  '${day.minTemp.toStringAsFixed(0)}°',
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
