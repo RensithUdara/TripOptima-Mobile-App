@@ -405,16 +405,16 @@ class WeatherProvider with ChangeNotifier {
       icon: icon,
       temperature: temperature,
       feelsLike: feelsLike,
-      minTemp: temperature - 2.0, // Placeholder
-      maxTemp: temperature + 2.0, // Placeholder
+      minTemp: minTemp, 
+      maxTemp: maxTemp, 
       windSpeed: windSpeed,
       windDirection: windDirection.toDouble(),
       humidity: humidity,
       pressure: pressure,
       visibility: visibility,
       clouds: cloudCover.toDouble(),
-      rain: precipitation,
-      snow: 0.0, // Placeholder
+      rain: rain,
+      snow: snow,
     );
   }
   
