@@ -1,5 +1,7 @@
 # TripOptima Mobile App
 
+![TripOptima Logo](assets/images/logo.png)
+
 ## 📱 Overview
 
 TripOptima is a comprehensive travel planning and management mobile application built with Flutter that helps users plan, organize, and optimize their trips. From creating itineraries to discovering local attractions, managing expenses, and accessing real-time weather forecasts, TripOptima provides all the essential tools for a perfect travel experience.
