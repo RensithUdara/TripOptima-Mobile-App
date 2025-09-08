@@ -197,6 +197,13 @@ class UIProvider with ChangeNotifier {
     // AppPreferences.setBool('useAnimations', _useAnimations);
   }
   
+  void setUseAnimations(bool value) {
+    _useAnimations = value;
+    notifyListeners();
+    // Persist setting
+    // AppPreferences.setBool('useAnimations', value);
+  }
+  
   void setLanguage(String languageCode) {
     _languageCode = languageCode;
     notifyListeners();
