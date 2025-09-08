@@ -1,16 +1,36 @@
-# trip_optima_mobile_app
+# TripOptima Mobile App
 
-A new Flutter project.
+## 📱 Overview
 
-## Getting Started
+TripOptima is a comprehensive travel planning and management mobile application built with Flutter that helps users plan, organize, and optimize their trips. From creating itineraries to discovering local attractions, managing expenses, and accessing real-time weather forecasts, TripOptima provides all the essential tools for a perfect travel experience.
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+### 🧳 Trip Management
+- Create and manage multiple trips with detailed itineraries
+- Add destinations, accommodations, and activities to your trips
+- View trip timelines and schedules
+- Get personalized trip recommendations based on preferences
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🗺️ Exploration
+- Discover popular destinations and attractions
+- Search for places with advanced filtering options
+- Save favorite locations for future trips
+- Get route optimization for multiple destinations
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🌤️ Weather Integration
+- Real-time weather forecasts for trip destinations
+- 5-day weather predictions
+- Weather-based activity recommendations
+
+### 👤 User Profile
+- Secure authentication with email/password and Google Sign-in
+- Personalized user profiles
+- Travel preferences and history
+- Favorite destinations management
+
+### 📊 Additional Tools
+- Trip expense tracking
+- Packing list management
+- Travel notes and reminders
+- Share trips with friends and family
