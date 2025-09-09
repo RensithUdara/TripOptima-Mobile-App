@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96752491730",
+    "project_id": "trip-optima-mobile-app",
+    "storage_bucket": "trip-optima-mobile-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96752491730:android:6f90e4374b5d5b1ae6a10b",
+        "android_client_info": {
+          "package_name": "com.example.trip_optima_mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx8VrhohOJBMD0kY7QWC7fagDgPnJuorU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
